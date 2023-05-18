@@ -1,22 +1,31 @@
-class Processo:
+class Operacoes:
+    def __init__(self):
+        self.quantidade_acoes = 0
+        self.media_ponderada = 0
+        self.prejuizo = 0
 
-    def __init__(self, custo_unidade, operacao, quantidade):
-        self.custo_unidade = custo_unidade
-        self.operacao = operacao
-        self.quantidade = quantidade
+    def buy(self, quantidade, valor):
+        nova_media_ponderada = ((self.quantidade_acoes * self.media_ponderada) + (quantidade * valor)) / (self.quantidade_acoes + quantidade)
+        self.media_ponderada = nova_media_ponderada
+        self.quantidade_acoes += quantidade
+        return 0
 
-def comprar_acoes():
-    return 0
-
-def vender_acoes():
-    return 0
-
-def calcular_peso_medio_ponderado(qtd_atual_acoes, media_ponderada_atual, qtd_acoes_compradas, valor_compra):
-    return ((qtd_atual_acoes * media_ponderada_atual) + (qtd_acoes_compradas * valor_compra)) / (qtd_atual_acoes + qtd_acoes_compradas)
-
-def calcular_taxa_operacao(custo_unidade_acao, peso_medio_moderado_atual, qtd_acoes):
-    valor_total = custo_unidade_acao * qtd_acoes
-    return custo_unidade_acao > peso_medio_moderado_atual and valor_total > 20000
-
-def calcular_prejuizo_acao(custo, peso_medio_moderado_atual):
-    return custo < peso_medio_moderado_atual
+    def sell(self, quantidade, valor):
+        lucro = (valor - self.media_ponderada) * quantidade
+        imposto_pago = 0
+        if lucro > 0:
+            if (valor * quantidade) > 20000:
+                imposto_pago = lucro * 0.2
+                lucro -= imposto_pago
+            if self.prejuizo > 0:
+                if lucro >= self.prejuizo:
+                    lucro -= self.prejuizo
+                    self.prejuizo = 0
+                else:
+                    self.prejuizo -= lucro
+                    lucro = 0
+        else:
+            self.prejuizo -= lucro
+            lucro = 0
+        self.quantidade_acoes -= quantidade
+        return imposto_pago
