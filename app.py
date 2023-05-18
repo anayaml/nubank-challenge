@@ -1,18 +1,21 @@
 import sys
 import json
 from process import Operacoes
+import util
 
 operacoes = Operacoes()
 
 def carregar_json():
-    file_name = sys.argv[1]
-    with open(file_name, 'r') as j:
+    arquivo_input = sys.argv[1]
+    aux = sys.argv[1].split("\\")
+    arquivo_output = aux[2]
+    with open(arquivo_input, 'r') as j:
         conteudo = json.loads(j.read())
         for k in conteudo:
             if k["operation"] == "buy":
                 imposto = operacoes.buy(k["quantity"], k["unit-cost"])
-                print(imposto)
+                util.gerar_arquivo_json(arquivo_output, imposto)
             if k["operation"] == "sell":
                 resultado = operacoes.sell(k["quantity"], k["unit-cost"])
-                print(resultado)
+                util.gerar_arquivo_json(arquivo_output, resultado)
 carregar_json()

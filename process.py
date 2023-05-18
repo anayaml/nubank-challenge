@@ -12,6 +12,7 @@ class Operacoes:
 
     def sell(self, quantidade, valor):
         lucro = (valor - self.media_ponderada) * quantidade
+        lucro -= self.prejuizo
         imposto_pago = 0
         if lucro > 0:
             if (valor * quantidade) > 20000:
